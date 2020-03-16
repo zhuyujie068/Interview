@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    /* 
+        一、webpack4新特性
+
+        1.mode属性
+        webpack需要设置mode属性，可以是development或production。例如：webpack --mode development
+
+        webpack针对开发模式提供的特性：
+            浏览器调试工具
+            注释、开发阶段的详细错误日志和提示
+            快速和优化的增量构建机制
+        
+        webpack针对生产模式提供的特性：
+            开启所有的优化代码
+            更小的bundle大小
+            去除掉只在开发阶段运行的代码
+            scope hosting 和 tree-shaking
+
+        2.插件和优化
+        webpack4删除CommonsChunkPlugin插件，它使用内置API optimization.splitChunks和optimization.runtimeChunk，这意味着webpack会默认为你生成共享的代码。
+
+        其他插件的变化：
+        NoEmitOErrorsPlugin 废弃 optimization.noEmitOnErrors 替代
+        ModuleConcatenationPlugin 废弃 optimization.concatenatenateModules 替代
+        NamedModulesPlugin 废弃 optimization.namedModules 替代
+        uglifyjs-webpack-plugin升级到了 v1.0 版本
+
+        3.开箱即用 WebAssembly
+        webAssembly（wasm）会带来运行时性能的大幅度提升，由于在社区的热度，webpack4对它做了开箱即用的支持。你可以直接对本地的wasm模块进行import或者export操作，也可以通过编写loaders来直接import C++ 、C 或者 Rust
+
+        4.支持多种模块类型
+        javascript/auto:在webpack3里，默认开启对所有模块系统的支持，包括CommonJS、AMD、ESM
+        javascript/esm:只支持ESM这种静态模块
+        javascript/dynamic：只支持CommonJS和AMD这种动态模块
+        json:只支持JSON数据，可以通过require和import来使用
+        webassembly/experimental:只支持wasm模块，目前处于试验阶段
+    
+        5.0CJS 
+        0CJS 的含义是0配置，webpack4受Parcel打包工具启发，尽可能的让开发者运行项目的成本变低。为了做到0配置，webpack4不再强制需要webpack.config.js作为打包的入口配置文件了，它默认的入口为 './src' 和默认出口 './dist',对小项目而言是福音。
+    
+        6.新的插件系统
+        webpack4对插件系统进行了不少修改，提供了针对插件和钩子的新API
+        所有的 hook 由 hooks 对象统一管理，它将所有的 hook 作为扩展的类属性
+        当添加插件时，必须提供一个插件名称
+        开发插件时，可以选择sync/callback/promise作为插件类型
+        可以通过this.hooks={myHook:new SynckHook{...}} 来注册hook
+
+        注意：当使用 webpack4 时，确保使用 Node.js 的版本 >= 8.9.4。因为 webpack4 使用了很多 JS 新的语法，它们在新版本的 V8 里经过了优化。
+
+        
+
+        一、安装webpack
+            为了防止全局安装出现的版本冲突，一般把 webpack 安装在本地项目中：
+                npm i webpack webpack-cli --save-dev
+
+
+        二、运行本地 webpack 命令
+
+        方法1：
+         从 npm5.2 版本后，提供了一个命令：npx ,基于这个命令可以执行本地安装的模块
+
+         npx webpack 基于 npx 执行了 webpack 命令，而这个命令就是实现打包部署的
+
+          实现原理：
+           先找到 node_modules/.bin
+           要求里面得有 webpack.cmd 的文件
+           执行 webpack.cmd
+
+        方法2：（开发中常用）
+         在 package.json 中配置可执行的脚本
+         打开 package.json 在 scripts 中配置 “build”: "webpack" 命令如：
+
+         "scripts"：{
+        	"build": "webpack"  // serve 、 build  名字可以随便取
+            }
+        
+        使用 npm run build 命令执行
+        
+        
+        三、基础打包配置规则
+        
+            所有的规则都写在 module.exports={} 中
+
+            src:存储项目开发的源文件
+            dist:打包后的文件目录
+
+            // 打包模式  开发环境 development   生产环境 production
+            mode: 'development',
+            // 入口
+            entry: './src/index-my.js',
+            //输出
+            output: {
+                // 输出文件的文件名
+                // 在文件名中添加 [hash],如：bundle.min.[hash].js ，可以让每一次生成的文件名都带有 HASH值
+                filename: 'bundle.min.[hash].js',
+                // 输出的目录必须是绝对路径  
+                path: path.resolve(__dirname, 'dist')
+            }
+
+
+
+
+        四、使用自定义配置文件名  
+
+          语法： 
+           npx webpack --config 自定义配置文件名
+           npx webpack --config webpack.config.development.js
+
+           
+          可在 package.json 中配置可执行的脚本命令 （区分开发环境） （开发常用）
+          
+          //建立 webpack.config.development.js 用于开发环境的配置文件
+          //建立 webpack.config.production.js  用于生产环境的配置文件
+
+            "scripts"：{   
+                "serve": "webpack --config webpack.config.development.js"  
+        	    "build": "webpack --config webpack.config.production.js"  
+            }
+
+
+
+        五、webpack-dev-server （ https://www.webpackjs.com/configuration/dev-server/ ）
+            webpack-dev-server会帮我们创建一个服务， 只有在开发中才需要使用。
+
+
+            1、安装：
+            在项目文件根目录（通常会有 package.json 文件）下，执行命令：
+                npm install webpack-dev-server --save-dev （会默认安装最新的 webpack-dev-server）
+
+            如果要安装特定版本的 webpack-dev-server 的话，可以执行命令：
+                npm install webpack-dev-server@x.x.x --save-dev
+
+                注：webpack-dev-server 的版本与 webpack 版本不匹配会报错
+
+
+            2、配置：
+
+                在配置文件（ webpack.config.js ）中导入node中的路径模块 （node内置模块）
+                let path = require('path');
+
+            // 在 webpack.config.js 中配置 DEV-SERVER
+            devServer: {
+                // 创建服务指定的端口号
+                port: 3000,       
+                // 显示打包编译的进度
+                progress: true,   
+                // 指定当前服务处理资源的目录( 默认执行该目录下面的 index.html )
+                contentBase: './build',   
+                // 编译完会自动打开浏览器(打开电脑默认浏览器)
+                open: true   
+            }
+
+            3、执行命令： 
+                方法1：
+                    npx webpack-dev-server --config xxx.js
+
+                方法2：
+                    可在 package.json 中配置可执行的脚本命令
+
+                "scripts"：{   
+                    "serve": "webpack-dev-server --config webpack.config.development.js"  
+        	        "build": "webpack --config webpack.config.production.js"  
+                }
+                
+            4、编译完成
+                服务启动后，默认是不关闭的，服务将在一直监听，当改变入口文件中的代码时，它会自动进行编译，编译完成后浏览器将自动刷新
+
+                
+
+        六、html-webpack-plugin （ https://www.webpackjs.com/plugins/html-webpack-plugin/ ）
+                 
+            1、安装
+                npm install --save-dev html-webpack-plugin
+
+
+            2、在配置文件中导入 html-webpack-plugin 插件 （ 每一导入进来的插件的是一个类 ）
+                let HtmlWebpackPlugin = require('html-webpack-plugin');
+
+            3、使用
+
+                // 使用插件（数组，可使用多个插件）
+                lugins: [
+                new HtmlWebpackPlugin({  // HtmlWebpackPlugin使用： https://github.com/jantimon/html-webpack-plugin#configuration
+                    // 指定需要编译的文件（不指定模板会按照默认模板创建一个HTML页面，在项目中一般都是把自己写好的HTML进行编译）
+                    template: './src/index.html',
+                    // 编译后输出的文件名
+                    filename: 'index.html',
+                    // 让我们引入JS后面加上 HASH戳 ( 用于清除缓存 )，但是真实项目中一般都是每一次编译生成不同的 JS文件名引入
+                    // hash: true,
+
+                    // 在 输出(output) 中的 输出文件的文件名(filename) 中添加 [hash],
+                    // 如：bundle.min.[hash].js ，可以让每一次生成的文件名都带有 HASH值，生成不同的 JS文件名（编译文件里的代码没有改变的时候是不会重新修改 hash戳）
+                                
+                    // 控制压缩 html 规则
+                        minify:{ // minify使用  https://github.com/jantimon/html-webpack-plugin#minification
+                        // 去掉空格
+                        collapseWhitespace:true,
+                        // 去掉注释
+                        removeComments:true,
+                        // 去掉标签属性的双引号
+                        removeAttributeQuotes:true,
+                        // 去掉没有属性值的属性
+                        removeEmptyAttributes:true
+                            }
+                        })
+                    ]
+
+                    
+        七、webpack中的加载器loader：处理样式的
+            处理顺序：先把 less 变成 css ，再为 css3 语法添加前缀，再处理 css 中特殊的语法，再插入的页面中。
+
+            1.安装
+                // 把编译好的 css 插入到页面的 HEAD 中（内嵌式样式）
+                npm install style-loader --save-dev    
+
+                // 编译解析 @import/URL() 这种语法
+                npm install --save-dev css-loader
+
+                //加载和转译 LESS 文件
+                npm install --save-dev less-loader less
+
+                // 使用 PostCSS 加载和转译 CSS/SSS 文件 (自动添加CSS前缀,自动补全CSS3前缀)
+                npm install --save-dev autoprefixer postcss-loader  
+                //autoprefixer 是前缀加载规则，postcss-loader 是前缀加载器，
+                  使用 autoprefixer 方法很多：
+
+                  方法1：
+                   需要在根目录中创建 postcss.config.js 文件（ https://www.npmjs.com/package/autoprefixer ）
+                   
+                   在文件中写入:
+                        module.exports = {
+                            plugins: [
+                            require('autoprefixer')
+                            ]
+                        }
+                    还需要在 module 中以 "postcss-loader" 方式引入规则
+
+                
+                  方法2：
+                  在module 中以下面的方式加入 postcss-loader （https://www.npmjs.com/package/postcss-loader）
+
+                            {
+                                loader:"postcss-loader",
+                                options:{
+                                    ident:"postcss",
+                                    plugins:[
+                                        require("autoprefixer")
+                                    ]
+                                }
+                            }
+            
+            2.在 package.json 中配置浏览器兼容 （ 不一定需要配置，取决浏览器版本 ）
+              "browserslist": [ // 配置浏览器规则, 这里是指定浏览器向后兼容几个版本，否则会导致 autoprefixer 有些不兼容
+                    "> 1%",
+                    "last 2 versions"
+                ]
+
+            
+            3.导入
+                样式（css、less）需要我们在入口的 JS 中导入后才可以使用如：
+                需要使用 index.css，就的在入口的 JS中导入： require('./index.css');
+
+            4.配置
+                // 使用加载器 loader 处理规则,所有的加载器都需要安装（ https://www.webpackjs.com/loaders/ ）
+                module:{ 
+                    // 模块规则（每一个规则的是一个对象）：使用加载器（ 默认从右向左，从上向下 ）
+                    rules:[{
+                        // 基于正则表达式匹配那些模块需要处理
+                        test: /\.(css|less)$/, 
+                        // 控制使用的 loader（有顺序的：从右向左执行）
+                        use:[ // 使用加载器
+                            // 把编译好的 css 插入到页面的 HEAD 中（内嵌式样式）
+                            "style-loader", 
+                            // 编译解析 @import/URL() 这种语法
+                            "css-loader",   
+                            // 设置前缀
+                            "postcss-loader", 
+                            //  编译 LESS
+                            {
+                                loader:"less-loader",
+                                options:{
+                                    // 加载器额外的配置
+                                }
+                            }                 
+                        ]
+                    }]
+                }
+        
+
+        
+        八、mini-css-extract-plugin 抽离 css 内容 （  https://www.npmjs.com/package/mini-css-extract-plugin ）
+
+            1.安装
+              npm install --save-dev mini-css-extract-plugin
+
+            2. 在 webpack.config.js 中导入 
+                let MiniCssExtractPlugin=require('mini-css-extract-plugin');
+
+            3.修改加载器中的导入方式
+                将 "style-loader" 修改成 MiniCssExtractPlugin.loader  
+                MiniCssExtractPlugin.loader 是配合 mini-css-extract-plugin 插件使用，将 css 以外链的形式导入页面 （使用 MiniCssExtractPlugin.loader 就不能使用 "style-loader"）
+
+
+            4.使用
+            在 plugins 中添加 
+                
+                new MiniCssExtractPlugin({
+                    // 指定输出的文件名
+                    filename:'main.mon.css'
+                })
+        
+        九、optimize-css-assets-webpack-plugin 优化压缩单独的css文件 ( https://www.npmjs.com/package/optimize-css-assets-webpack-plugin )
+
+            1.安装
+             npm install optimize-css-assets-webpack-plugin --save-dev
+
+            2.在 webpack.config.js 中导入
+             let OptimizeCssAssetsWebpackPlugin=require('optimize-css-assets-webpack-plugin');
+
+             3.使用
+             在 module.exports = {} 添加：
+                // 配置优化规则
+                optimization:{
+                    // 压缩优化
+                    minimizer:[
+                        // 压缩css ( 产生问题：JS压缩不再执行自己默认的压缩方式了，走的是这个插件，从而导致无法使用默认方法压缩 js  )
+                        new OptimizeCssAssetsWebpackPlugin()
+                    ]
+                }
+            
+
+        十、解决使用 optimize-css-assets-webpack-plugin 产生的问题
+            
+            1.使用 uglifyjs-webpack-plugin 插件压缩js ( https://www.npmjs.com/package/uglifyjs-webpack-plugin )
+              安装 npm install uglifyjs-webpack-plugin --save-dev
+
+            2.配置 
+              将在 module.exports = {} 中的 optimization 修改如下：
+                optimization: {
+                    // 压缩优化
+                    minimizer: [
+                        // 压缩 css ( 产生问题：JS压缩不再执行自己默认的压缩方式了，走的是这个插件，从而导致无法使用默认方法压缩 js )
+                        new OptimizeCssAssetsWebpackPlugin(),
+                        // 压缩 js
+                        new UglifyjsWebpackPlugin({
+                            // 是否使用缓存
+                            cache: true,
+                            // 是否是并发编译（一次性编译多个js）
+                            parallel: true,
+                            // 启动源码映射（方便调试）
+                            sourceMap: true
+                        })
+                    ]
+                }
+        
+        十一、基于 babel 实现 ES6 的转换和 ESLint 语法检测
+              https://babeljs.io/
+              https://eslint.org/
+
+              1.安装 （ https://www.npmjs.com/package/babel-loader/v/8.0.5 ）
+                npm install -D babel-loader @babel/core @babel/preset-env   
+
+                @babel/core : babel核心
+
+                @babel/preset-env  ： 用来把 ESx 转换成 ES y ( 如：将ES6转换成ES5 )
+
+
+                @babel/plugin-proposal-decorators  将类和对象装饰器编译为ES5
+                npm install --save-dev @babel/plugin-proposal-decorators 
+
+                @babel/plugin-proposal-class-properties  可转换静态类属性以及使用属性初始化程序语法声明的属性
+                npm i --save-dev @babel/plugin-proposal-class-properties 
+ 
+                @babel/plugin-transform-runtime  可重新使用Babel注入的帮助程序代码以节省代码大小(使用 es7语法需要用到 使 @babel/plugin-transform-runtime 就需要安装 @babel/runtime @babel/polyfill 来支持 )
+                npm i --save-dev @babel/plugin-transform-runtime 
+
+
+
+                @babel/runtime  babel的模块化运行时助手（要安装到生产环境下）
+                npm install --save @babel/runtime
+
+                @babel/polyfill   提供完整的ES2015 + 环境所需的填充料 （要安装到生产环境下）
+                npm install --save @babel/polyfill
+                使用@babel/polyfill
+                
+                方法1.需要在 入口JS 文件中导入 ： require('@babel/polyfill');
+
+                方法2.在配置文件中
+
+                    入口（ entry ）中添加：     entry: ["@babel/polyfill","./src/index.js"],
+
+
+
+                eslint eslint-loader  ESLint是用于识别和报告ECMAScript / JavaScript代码中的模式的工具（用语法检测，可以检查文件babel-loader）
+                npm install eslint eslint-loader --save-dev
+
+
+
+
+
+
+
+
+                补充知识：在vscode中开启ES7中类的装饰器，项目根目录中设置 jsconfig.json 
+
+                {
+                    "compilerOptions":{
+                        "experimentalDecorators":true
+                    }
+                }
+
+
+
+
+                */
+    </script>
+</body>
+</html>
