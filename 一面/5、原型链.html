@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原型链</title>
+</head>
+
+<body>
+    <!-- 
+
+
+     -->
+    <script>
+        //一、创建对象有几种方法
+
+
+        // 1、字面量和内置构造函数
+        var o1 = {
+            name: 'o1'
+        };
+
+        var o2 = new Object({
+            name: 'o2'
+        });
+        /*
+            上面的两种写法，效果是一样的。因为，第一种写法，o1会指向Object。
+
+            第一种写法是：字面量的方式。
+
+            第二种写法是：内置的构造函数
+        */
+
+
+        // 2、构造函数 
+        var M = function (name) {
+            this.name = name;
+        };
+        var o3 = new M('o3');
+
+        // 3、Object.create
+        var p = {
+            name: 'p'
+        };
+        var o4 = Object.create(p); //拷贝了p 所有的属性和方法
+
+        //输出 
+        console.log(o1)          // Object {name: "o1"}
+        console.log(o2)          // Object {name: "o2"}
+        console.log(o3)          //  M {name: "o3"}
+        console.log(o4)          // {}
+        console.log(o4.name)     // "p"
+    </script>
+</body>
+
+</html>
