@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // Set 可以当做 数组 去用去理解 , 它是一种集合，数组本身也是一种集合概念。Set 和 数组的区别是，Set 中不可以有重复的元素
+
+        // Map 可以和 Object 做比较，Object 有 key、value , key 一定为字符串（当然允许 Symbol 变量）。Map 的 key 可以是任意数据类型(如：数组)。
+
+        // Set 声明 方法一 
+        let list = new Set();
+        list.add(5);
+        list.add(7);
+
+        // 获取 Set 长度 用 size ,相当与数组的 length 属性
+        console.log(list.size) // 2
+
+
+        // Set 声明 方法二 （相当给一个默认值）
+        let arr = [1, 2, 3, 4, 5];
+        let twoList = new Set(arr); // Set 将 数组给转换成为一个集合了
+        console.log(twoList.size) // 5
+
+        // Set 添加重复的 值时 不会报错，都是添加不进 
+
+        let threeList = new Set();
+        threeList.add(1);
+        threeList.add(2);
+        threeList.add(1);
+
+        console.log(threeList) // {1, 2}
+
+
+        // Set 可以用来给数组去重 (Set 在做转换的时候，不会做数据类型的转换,只有同数据类型，同值才会被去重(掉))
+        let arr1 = [1, 2, 3, "1", 2]
+        let list2 = new Set(arr1);
+
+        console.log(list2) // {1, 2, 3,"1"}
+
+
+        {
+            // Set 方法 ：add（添加）、delete（删除）、clear（清空）、has（查询）
+            let arr = ['add', 'delete', 'clear', 'has'];
+            let list = new Set(arr);
+
+            console.log(list.has('add')) // true
+            console.log(list.clear()) // undefined
+            console.log(list.add(1)) // {1}
+            console.log(list.delete(1)) // true
+            console.log(list) // {}
+        }
+
+        {
+            // Set 读取（遍历）
+            let arr = ['add', 'delete', 'clear', 'has'];
+            let list = new Set(arr);
+
+            //  list.keys 、list.values 获取的都是 value 值
+            for (let key of list.keys()) {
+                console.log(key) // add、delete、clear、has
+            }
+
+            for (let value of list.values()) {
+                console.log(value) // add、delete、clear、has
+            }
+
+            for (let item of list) {
+                console.log(item) // add、delete、clear、has
+            }
+
+            for (let [key, value] of list.entries()) {
+                console.log(key, value) // add add、delete delete、clear clear、has has
+            }
+
+            // forEach 默认的也是 value
+            list.forEach((item) => {
+                console.log(item) // add、delete、clear、has
+            })
+
+        }
+
+
+        {
+            /* WeakSet 和 Set 区别：
+                1、支持的数据类型不一样，WeakSet 的元素只能是对象,WeakSet 对 对象是弱引用，它不会检测这个对象有没有在其他地方用过不会与垃圾回收机制挂钩上（就是该对象被垃圾回收机制回收后它也不知道，使用时需要注意）
+                2、WeakSet 没有 clear 方法，size 属性，不可遍历
+            */
+
+            let weakList = new WeakSet();
+            let arg = {}
+            console.log(weakList) // {}
+
+        }
+
+
+        // ---------------------------------------------------------------------------------
+        {
+            let map = new Map();
+            let arr = ['123']
+
+            map.set(arr, 456);
+
+            console.log(map) // {Array(1) => 456}
+            console.log(map.get(arr)) // 456
+        }
+
+        {
+            let map = new Map([
+                ['a', 123],
+                ['b', 456]
+            ]);
+            console.log(map) // {"a" => 123, "b" => 456}
+            console.log(map.size) // 2
+            console.log(map.delete('a')) // true
+            console.log(map.clear()) // undefined
+            // Map 的遍历和 Set 一样
+        }
+
+        {
+          /*
+            Map 与 WeakMap 的区别 和 Set 与 WeakSet 的区别差不多
+            WeakMap 的 key 值也必须是对象，也没有 clear 方法，size 属性，不可遍历
+          */
+            
+          let weakmap =new WeakMap();
+
+          let o={};
+          weakmap.set(o,123)
+          console.log(weakmap.get(o)) // 123
+        }
+    </script>
+</body>
+
+</html>

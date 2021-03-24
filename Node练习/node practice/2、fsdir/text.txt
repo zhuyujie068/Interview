@@ -1,0 +1,195 @@
+/**
+ *  buffer (缓冲器  --> 了解即可 )
+ *  对象用于表示固定长度的字节序列
+ *  http://nodejs.cn/api/buffer.html
+ */
+
+const {
+    Buffer
+} = require("buffer")
+
+
+// 1、数组不能进行二进制数据的操作
+// 2、js数组不像 Java、Python 等语言效率高
+// 3、buffer 会在内存空间开辟出固定大小的内存，会将数据存放在一起，使效率变高
+
+
+// ---------- 在知道内容时的操作 ------------（一般开发时候不知道要存放的内容）
+
+// 将信息以二进制存放到缓冲器中（在控制台打印出来显示的是 十六 进制，因为 二进制 显示的太长）
+let str = "hello node"
+let buf = Buffer.from(str)
+console.log(buf)
+
+
+// 输出 buffer 内容 (将 buffer 转换成 字符串)
+console.log(buf.toString())
+
+
+
+
+
+// ---------- 不知道内容时的操作 ------------
+let buf1 = Buffer.alloc(10) // 开辟一个空的 buffer ,长度为 10 个长度 
+buf1[0] = 255 // 将 255 存入
+console.log('buf1[0]', buf1[0])
+console.log('buf1', buf1)
+
+
+
+// ----------------------
+
+// 使用 allocUnsafe 开辟空间 是不安全的，但是效率 比 Buffer 高，如果存储不重要的信息可以使用
+let buf2 = Buffer.allocUnsafe(10)
+console.log('buf2', buf2) /**
+ *  fs.unlink
+ *  删除文件  (谨慎使用，删除后不可恢复)
+ *  http://nodejs.cn/api/fs.html#fs_fs_unlink_path_callback
+ */
+
+let fs = require('fs')
+
+
+fs.unlink('delete.txt',()=>{
+    console.log('删除成功')
+})
+
+text3/**
+ * 读写文件
+ */
+
+let fs = require('fs');
+
+
+/**
+ *  文件系统标志     http://nodejs.cn/api/fs.html#fs_file_system_flags
+ *  当 flag 选项采用字符串时，则以下标志均可用：
+ *  'a': 打开文件用于追加。 如果文件不存在，则创建该文件。
+ *  'r': 打开文件用于读取。 如果文件不存在，则会发生异常。
+ *  'w': 打开文件用于写入(会覆盖之前的内容)。 如果文件不存在则创建文件，如果文件存在则截断文件
+ * 
+ *  注： write => w     reas => r     append => a
+ */
+
+// 带有 Sync 的表示同步    
+// 指定了 encoding 选项，则此函数返回字符串。 否则，返回 buffer 
+
+
+// ****************  读取文件的全部内容  ****************  
+// ****************  写入内容  **************** 
+
+//  同步 (会造成等待和阻塞)  
+let content = fs.readFileSync('hello.txt', {
+    flag: 'r',
+    encoding: 'utf-8'
+});
+console.log('同步', content)
+
+
+
+// 异步 http://nodejs.cn/api/fs.html#fs_fs_readfile_path_options_callback
+
+// -----------------  未封装  ---------------------
+
+fs.readFile('hello.txt', {
+    flag: 'r',
+    encoding: 'utf-8'
+}, (err, data) => {
+    if (err) {
+        console.log('错误：', err)
+    } else {
+        console.log('未封装异步', data)
+    }
+})
+
+// -----------------  进行封装  ---------------------
+
+// 将异步进行封装
+function fsRead(path) {
+    return new Promise((resolve, rejects) => {
+        fs.readFile(path, {
+            flag: 'r',
+            encoding: 'utf-8'
+        }, (err, data) => {
+            if (err) {
+                // 失败执行的内容
+                rejects(err)
+            } else {
+                // 成功执行的内容
+                resolve(data)
+            }
+        })
+    })
+}
+
+// -----------------  调封装  ---------------------
+let w1 = fsRead('hello.txt').then((res) => {
+    console.log('封装后的异步', res)
+})
+
+
+// -----------------  升级：通过第一个文件内容获取第二个文件  ---------------------
+async function ReadList() {
+    let file = await fsRead('text.txt');
+    let file2 = await fsRead(file.trim() + '.txt'); // trim() 去掉字符串左右的空格
+    let file3 = await fsRead(file2 + '.txt');
+    console.log(file3);
+}
+
+ReadList()hello node.js
+/**
+ * 文件写入
+ */
+
+let fs = require('fs');
+
+
+// -----------------  未封装  ---------------------     http://nodejs.cn/api/fs.html#fs_fs_readfile_path_options_callback
+
+fs.writeFile('write.txt', "---文件需要写入的信息---", {
+    flag: "w",
+    encoding: "utf-8"
+}, (err) => {
+    if (err) {
+        console.log("写入内容出错", err)
+    } else {
+        console.log("写入内容成功")
+    }
+    
+})
+
+
+// -----------------  进行封装  ---------------------
+
+function fsWrite(prat,content,flag='a',encoding='utf-8') {
+    return new Promise((resolve,reject)=>{
+        fs.writeFile(prat, content, {
+            flag,
+            encoding
+        }, (err) => {
+            if (err) {
+                // 写入内容出错
+                reject(err)
+            } else {
+                // 写入内容成功
+                resolve(err)
+            }
+            
+        })
+    })
+}
+
+
+// -----------------  调封装  ---------------------
+
+async function WriteList() {
+    await fsWrite('write.txt','\n今天准备吃什么？\n')
+    await fsWrite('write.txt','吃麻辣烫\n')
+    await fsWrite('write.txt','好呀\n')
+}
+
+WriteList()升级：通过第一个文件内容获取第二个文件 ----------> 我是最后一个 text 文件---文件需要写入的信息---
+今天准备吃什么？
+吃麻辣烫
+好呀
+text2

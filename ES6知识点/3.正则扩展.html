@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        {
+            // ES5 生成 正则 构造函数 两种方法
+            let regex = new RegExp('xyz', 'i')
+            let regex2 = new RegExp(/xyz/i)
+
+            console.log(regex.test('xyz123'), regex2.test('xyz123')) // true  true
+
+
+            // ES6 方法 （将上面两种方法合并，第二参数是用来填写修饰符的该修饰符会覆盖第一个参数后面的修饰符，如： 'i' 会覆盖  ig 修饰符）
+            let regex3 = new RegExp(/xyz/ig, 'i')
+
+            // flags  ES6 新增加 用来获取 正则中的修饰符
+            console.log(regex3.flags) // i
+        }
+
+        {
+            // 修饰符 g 和 y 的相同点：都是全局匹配，不同点：g 在第二次匹配时，只要 在第一次匹配完后面的任意一位置 只要 字符满足要求就可以，y 是在第一次匹配后开始进行字符开匹配
+            let s = 'bbb_bb_b'
+            let a1 = /b+/g
+            let a2 = /b+/y
+
+            console.log('one', a1.exec(s), a2.exec(s))
+            console.log('two', a1.exec(s), a2.exec(s))
+
+            // sticky 用来判断，该正则有没有使用 y 这个修饰符
+            console.log(a1.sticky, a2.sticky)
+        }
+    </script>
+</body>
+
+</html>

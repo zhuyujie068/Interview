@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        {
+            // isFinite 判断数值是否 有限（非 无穷大、无穷小、无限小数、不在有效值之内）（了解即可）
+            console.log(Number.isFinite(15)) // true
+            console.log(Number.isFinite(NaN)) // false
+            console.log(Number.isFinite(3 / 0)) // false
+        }
+
+
+
+        {
+            // isNaN 是否为 NaN  （了解即可）
+            console.log(Number.isNaN(15)) // false
+            console.log(Number.isNaN(NaN)) // true
+        }
+
+
+
+        {
+            // isInteger 判断是否为整数
+            console.log(Number.isInteger(25)) // true
+            console.log(Number.isInteger(25.0)) // true
+            console.log(Number.isInteger(25.55)) // false
+        }
+
+
+
+        {
+            // MAX_SAFE_INTEGER  js数值最大的常量
+            // MIN_SAFE_INTEGER  js数值最小的常量
+
+            console.log(Number.MAX_SAFE_INTEGER) // 9007199254740991
+            console.log(Number.MIN_SAFE_INTEGER) // -9007199254740991
+
+            // isSafeInteger 判断数值是否在 最大的常量 或 最小的常量 之间有效的范围
+            console.log(Number.isSafeInteger(10)) // true
+            console.log(Number.isSafeInteger('a')) // false
+        }
+
+
+
+        {
+            // 返回 浮点数 的 整数部分
+            console.log(Math.trunc(8.88)) // 8
+        }
+
+
+
+        {
+            // 判断 数值 是 正数、负数、0  ( 正数返回 1 、负数返回 -1 、0 返回 0 非数字 返回 NaN )
+            console.log(Math.sign(-8)) // -1
+            console.log(Math.sign(8)) // 1
+            console.log(Math.sign(0)) // 0
+            console.log(Math.sign('foo')) // NaN
+        }
+
+
+
+        {
+            // 给 数字 开 立方根
+            console.log(Math.cbrt(-1)) // -1
+            console.log(Math.cbrt(8)) // 2
+        }
+    </script>
+</body>
+
+</html>

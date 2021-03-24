@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        {
+            // 默认值
+            function test(x, y = 'world') {
+                console.log(x, y)
+            }
+            test('hello') // hello world
+            test('hello', 'kill') // hello kill
+        }
+
+
+        {
+            // 作用域
+            let x = 'test'
+
+            function test(x, y = x) {
+                console.log(x, y)
+            }
+
+            test() // undefined undefined
+            test('kill') // kill kill
+
+
+            function test2(c, y = x) {
+                console.log(x, y)
+            }
+
+            test2() // test test
+        }
+
+
+
+        {
+            // rest 参数
+            function test(...arg) {
+                for (const v of arg) {
+                    console.log(v) // 1 2 3 4 5 6
+                }
+            }
+
+            test(1, 2, 3, 4, 5, 6)
+        }
+
+
+
+        {
+            // 扩展运算符
+            console.log(...[1, 2, 3]) // 1 2 3
+            console.log('a', ...[1, 2, 3]) // a 1 2 3
+        }
+
+
+
+        {
+            // 箭头函数
+            let fun = v => v * 2
+            console.log(fun(3)) // 6
+
+            let fun2 = () => 5
+            console.log(fun2()) // 5
+        }
+
+
+
+        {
+            // 伪调用 
+            function tail(x) {
+                console.log(x)
+            }
+
+            function fun(x) {
+                return tail(x)
+            }
+
+            fun(123)    // 123
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //  1、 Symbol 声明的变量是独一无二的
+        let a1 = Symbol();
+        let a2 = Symbol();
+        console.log(a1 === a2) // false
+
+
+        //  2、 Symbol.for('key值')，当该key值已经声明过，再次使用同样的key值，就会将之前该key值声明的值直接返回，否则，调用 Symbol 声明新的值
+        let a3 = Symbol.for('a3');
+        let a4 = Symbol.for('a3');
+        console.log(a3 === a4) // true
+
+
+
+        //  3、 Symbol 声明的变量可以用来做 对象 的 key 值
+        let a5 = Symbol.for('abc');
+        let obj = {
+            [a5]: '123',
+            'abc': 345,
+            'c': 456
+        }
+        console.log(obj) //{abc: 345,c: 456,Symbol(abc): "123"} 
+
+
+        //  4、对象中有使用 Symbol 在 key 值，通过 for...in(of) 等循环，获取不到 Symbol key 的键值对，只可以拿到其他正常的 键值对（非Symbol属性）
+        for (let [key, value] of Object.entries(obj)) {
+            console.log(key + ':' + value) // abc:345   c:456
+        }
+
+
+        // 5、 可以通过 Object.getOwnPropertySymbols() 获取对象中的 Symbol 为 key 的 键值对（只能获取 Symbol属性），获取到的key 值 是数组形式的，然后再通过数组的方式获取值
+        Object.getOwnPropertySymbols(obj).forEach((item) => {
+            console.log(item) // Symbol(abc)
+            console.log(obj[item]) // 123
+        })
+
+
+        // 6、Reflect.ownKeys 返回数组 包含了 Symbol key值的属性，也包含了非 Symbol key值的属性
+        Reflect.ownKeys(obj).forEach((item)=>{
+            console.log(item) // abc、c、Symbol(abc)
+            console.log(obj[item])   // 345、456、123
+        })
+    </script>
+</body>
+
+</html>

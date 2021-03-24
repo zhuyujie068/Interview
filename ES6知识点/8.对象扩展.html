@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        {
+            // 简洁表示法
+            let o = 1
+            let k = 2
+
+            let obj = {
+                o,
+                k
+            }
+
+            console.log(obj) // {o: 1, k: 2}
+
+
+            let es5_method = {
+                hello: function () {
+                    console.log('hello')
+                }
+            }
+
+            let es6_method = {
+                hello() {
+                    console.log('hello')
+                }
+            }
+
+            console.log(es5_method.hello())
+            console.log(es6_method.hello())
+        }
+
+
+
+        {
+            // 属性表达式
+            let a = 'b'
+
+            let es5_obj = {
+                a: 'c',
+                b: 'c'
+            }
+
+            let es6_obj = {
+                [a]: 'c'
+            }
+
+            console.log(es5_obj, es6_obj) // {a: "c", b: "c"}   {b: "c"}
+        }
+
+
+        {
+            // Object.is() 判断两个对象是否相同 ，和   ===   的在作用一样
+            console.log(Object.is('abc', 'abc'), 'abc' === 'abc') // true true
+            console.log(Object.is([], []), [] === []) // false false 
+        }
+
+
+
+        {
+            // 拷贝 (浅拷贝), 将第二个对象拷贝到第一个对象中 , 不会拷贝该对象 继承、不可以枚举 的 属性
+            console.log(Object.assign({
+                a: 'a'
+            }, {
+                b: 'b'
+            })) // {a: "a", b: "b"}
+        }
+
+
+        {
+            // 遍历
+            let test = {
+                k: 123,
+                o: 456
+            }
+
+            for (const [key, value] of Object.entries(test)) {
+                console.log([key, value]) //  ["k", 123]   ["o", 456]
+            }
+        }
+
+
+        {
+            // 扩展运算符
+            let {a,b,...c}={a:'test',b:'kill',c:'ddd',d:'ccc'}
+        }
+    </script>
+</body>
+
+</html>

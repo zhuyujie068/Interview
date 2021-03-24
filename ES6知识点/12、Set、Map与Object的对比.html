@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 数据结构横向对比，增、删、改、查
+        {
+            let map = new Map();
+            let set = new Set();
+            let obj = {};
+
+            let item = {
+                t: 1
+            }
+
+            // 增
+            map.set('t', 1)
+            set.add(item)
+            obj['t'] = 1
+
+            // 查
+            console.info({
+                map_exist: map.has('t'),
+                set_exist: set.has(item),
+                obj_exist: 't' in obj
+            })
+
+            // 改
+            map.set('t', 2);
+            item.t = 2 // set 直接修改引用的 数据本身
+            obj['t'] = 2
+
+            // 删
+            map.delete('t')
+            set.delete(item)
+            delete obj['t']
+        }
+
+        // 总结： 在整个数据开发过程中涉及到数据结构能使用 Map 不使用 Array ，尤其是比较复杂的数据结构一定要放弃 Array 使用 Map ,如果对数据结构存储的唯一性考虑使用 Set (优先使用 Map 如果对数据的唯一性要求使用 Set ，放弃传统的 Array、Object)
+    </script>
+</body>
+
+</html>

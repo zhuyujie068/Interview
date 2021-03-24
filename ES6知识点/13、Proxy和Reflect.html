@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        /*
+            proxy => 代理，使用代理，我们可以操作对象时，需要先经过代理，才能到达对象，这样就可以起到‘拦截’的作用。
+
+            Reflect => 反射
+
+            proxy 和 Reflect 方法使用一样（只不过一个生成对象的时候通过 new ,如： let monitor = new Proxy() ，一个是直接使用 Reflect ,如：Reflect.get() ）
+        */
+
+        {
+            let obj = {
+                time: '2017-03-11',
+                name: 'net',
+                _r: 123
+            }
+
+            let monitor = new Proxy(obj, {
+                // 拦截对象属性的读取
+                get(target, key) {
+                    return target[key].replace('2017', '2018')
+                },
+                // 拦截对象设置属性
+                set(target, key, value) { // target => obj 对象，key => 属性，value => 值
+                    if (key === 'name') {
+                        return target[key] = value
+                    } else {
+                        return target[key]
+                    }
+                },
+                // 拦截 key in object 操作     
+                has(target, key) {
+                    if (key === 'name') {
+                        return target[key]
+                    } else {
+                        return false
+                    }
+                },
+                // 拦截 delete
+                deleteProperty(target, key) {
+                    if (key.indexOf('_') > -1) {
+                        delete target[key]
+                        return true
+                    } else {
+                        return target[key]
+                    }
+                },
+                // 拦截 Object.keys、Object.getOwnPropertySymbols、Object.getOwnPropertyNames
+                ownKeys(target) {
+                    return Object.keys(target).filter(item => item != 'time')
+                }
+
+            })
+
+            console.log('get', monitor.time)
+
+            monitor.time = '2018'
+            monitor.name = 'vs'
+
+            console.info(monitor)
+
+            delete monitor.time
+            delete monitor._r
+            console.log(monitor)
+        }
+
+
+        // proxy 有的方法 Reflect 也有，语法也一样
+
+        // Reflect 使用非常简单，不要 直接操作 Object 行为，而是通过 Reflect 来取和操作
+        {
+            console.log('------------------')
+            let obj = {
+                time: '2017-03-11',
+                name: 'net',
+                _r: 123
+            }
+
+            console.log(Reflect.get(obj, 'time'))
+
+            Reflect.set(obj, 'name', 'mukewang')
+            console.log(obj)
+
+            console.log('has', Reflect.has(obj, 'name'))
+
+        }
+
+
+        // proxy 与 Reflect 一起 实际操作
+        {
+            function validator(target, validator) {
+                return new Proxy(target, {
+                    _validator: validator,
+                    set(target, key, value, proxy) {
+                        if (target.hasOwnProperty(key)) {
+                            let va = this._validator[key];
+                            if (!!va(value)) {
+                                return Reflect.set(target, key, value, proxy)
+                            } else {
+                                throw Error(`不能设置${key}到${value}}`)
+                            }
+                        } else {
+                            throw Error(`${key} 不存在`)
+                        }
+                    }
+                })
+            }
+
+            const personValidators = {
+                name(val) {
+                    return typeof val === 'string'
+                },
+                age(val) {
+                    return typeof val === 'number' && val > 18
+                }
+            }
+
+            class Person {
+                constructor(name, age) {
+                    this.name = name;
+                    this.age = age;
+                    return validator(this, personValidators)
+                }
+            }
+
+            const person = new Person('lilei', 30)
+
+            console.info(person)
+
+            person.name = 48;
+
+        }
+    </script>
+</body>
+
+</html>

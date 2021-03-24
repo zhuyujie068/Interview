@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 装饰器（Decorator）是一种与类（class）相关的语法，用来注释或修改类和类方法。 decorator就是给类添加或修改类的变量与方法的。 装饰器是一种函数，写成@ + 函数名。它可以放在类和类方法的定义前面
+
+        // 第三方库 装饰器 的js库：core-decorators 
+
+        {
+
+            // 阻止函数被修改
+            let readonly = (target, name, descriptor) => {
+                descriptor.writable = false;
+                return descriptor
+            }
+
+
+            class Test {
+                @readonly // 通过该 装饰器 把类本身的功能进行修改了
+                time() {
+                    return '2017-03-11'
+                }
+            }
+
+            let test = new Test()
+
+            // 进行修改 函数
+            test.time = () => {
+                console.log('reset time')
+            }
+
+            // 被 装饰器 拦截
+            // console.log(test.time())
+        }
+
+
+
+
+        {
+            // 装饰器也可以放在 类 的外面，如果放在外面 需要放在 类的前面
+
+            let typename = (target, name, descriptor) => {
+                target.myname = 'hello'
+            }
+
+            @typename
+            class Test {
+
+            }
+
+            console.log('类修饰符', Test.myname)
+
+        }
+
+
+
+        {
+            let log = (type) => {
+                return (target, name, descriptor) => {
+                    let src_method = descriptor.value;
+                    descriptor.value = (...arg) => {
+                        src_method.apply(target, arg)
+                        console.log(`log ${type}`)
+                    }
+                }
+            }
+
+            class AD {
+                @log('show')
+                show() {
+                    console.info('ad is show')
+                }
+
+                @log('click')
+                click() {
+                    console.info('ad is click')
+                }
+            }
+
+            let ad = new AD()
+            ad.show()
+            ad.click()
+        }
+    </script>
+</body>
+
+</html>

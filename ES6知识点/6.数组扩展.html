@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        {
+            //  把一组数据变量 转换成 数据类型（数组），如果不传递参数则返回空数组
+            let arr = Array.of(2, 4, 6, 8)
+            console.log(arr) // [2,4,6,8]
+
+
+            let empty = Array.of()
+            console.log(empty) // []
+        }
+
+
+        {
+            // Array.from()方法就是将一个类数组对象或者可遍历对象转换成一个真正的数组。
+            let arrayLike = {
+                0: 'mom',
+                1: '18',
+                2: '男',
+                3: ['jane', 'john', 'Mary'],
+                'length': 4
+            }
+            let arr = Array.from(arrayLike)
+            console.log(arr) // ["tom", "65", "男", Array(3)]
+
+
+
+            // Array.from还可以接受第二个参数，作用类似于数组的map方法，用来对每个元素进行处理，将处理后的值放入返回的数组
+
+            console.log(Array.from([1, 3, 5], (item) => {
+                return item * 2
+            })) // [2, 6, 10]
+        }
+
+
+
+        {
+            // fill()函数，使用制定的元素填充数组，其实就是用默认内容初始化数组。该函数有三个参数，arr.fill(value, start, end)，value：填充值、start：填充起始位置，可以省略、end：填充结束位置，可以省略，实际结束位置是end-1
+
+
+            // 采用一默认值填初始化数组
+            let arr = [1, 'a', undefined, 2, 3]
+            console.log(arr.fill(8)) // [8, 8, 8, 8, 8]
+
+
+            // 制定开始和结束位置填充
+            console.log(arr.fill(6, 1, 4)) // [8, 6, 6, 6, 8]
+        }
+
+
+
+        {
+            // 遍历
+            let arr = ['1', 2, '3', 4]
+
+            for (const index of arr.keys()) {
+                console.log(index)
+            }
+
+            for (const value of arr.values()) {
+                console.log(value)
+            }
+
+            for (const [index, value] of arr.entries()) {
+                console.log(index, value)
+            }
+        }
+
+
+
+        {
+            // array.copyWithin()方法浅复制数组的一部分到同一数组中的另一个位置，并返回它，不会改变原数组的长度
+            let arr = [1, 2, 3, 4, 5]
+            console.log(arr.copyWithin(0, 3, 4))
+        }
+
+
+
+        {
+            //  Array.find() 找到满足条件的第一个元素返回，如果未找到，则返回undefined。
+            //  Array.findIndex() 找到满足条件的第一个元素，返回其位置，如果未找到，则返回-1
+
+            let arr = [1, 2, 3, 4, 5]
+
+            console.log(arr.find(item => {
+                return item > 3
+            })) // 4（值）
+
+
+            console.log(arr.findIndex(item => {
+                return item > 3
+            })) // 3（下标）
+        }
+
+
+
+        {
+            // 在ES5，Array已经提供了indexOf用来查找某个元素的位置，如果不存在就返回-1，但是这个函数在判断数组是否包含某个元素时有两个小不足，第一个是它会返回-1和元素的位置来表示是否包含，在定位方面是没问题，就是不够语义化。另一个问题是不能判断是否有NaN的元素。
+
+
+            // Array.includes()函数判断是否包含某一元素，除了不能定位外，解决了indexOf的上述的两个问题。它直接返回true或者false表示是否包含元素，对NaN一样能有有效
+
+            let arr = [1, 2, 3, 4, 5, NaN]
+            console.log(arr.includes(1))    // true
+            console.log(arr.includes(NaN))  // true
+        }
+    </script>
+</body>
+
+</html>

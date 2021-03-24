@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        {
+            // generator的基本定义就是在function后面加一个*符号  通过next一步步执行yield的代码
+            let tell = function* () {
+                yield 'a';
+                yield 'b';
+                return 'c'
+            };
+
+            let k = tell();
+
+            console.log(k.next());
+            console.log(k.next());
+            console.log(k.next());
+            console.log(k.next());
+        }
+
+
+
+        {
+            let obj = {};
+            obj[Symbol.iterator] = function* () {
+                yield 1;
+                yield 2;
+                yield 3;
+            }
+
+            for (let value of obj) {
+                console.log('value', value);
+            }
+        }
+
+
+
+        {
+            // 状态机（状态循环）
+            let state = function* () {
+                while (1) {
+                    yield 'A';
+                    yield 'B';
+                    yield 'C';
+                }
+            }
+
+            let status = state();
+            console.log(status.next()) //  A
+            console.log(status.next()) //  B
+            console.log(status.next()) //  C
+            console.log(status.next()) //  A
+            console.log(status.next()) //  B
+        }
+
+        {
+            // generator 的语法糖 async  await
+            // async函数把testGen里的*替换成 async，将 yield 替换成 await而已。所以说async/await是generator的语法糖
+            let state = async function () {
+                while (1) {
+                    await 'A';
+                    await 'B';
+                    await 'C';
+                }
+            }
+
+            let status = state();
+            console.log(status.next()) //  A
+            console.log(status.next()) //  B
+            console.log(status.next()) //  C
+            console.log(status.next()) //  A
+            console.log(status.next()) //  B
+        }
+
+
+
+        {
+            // 实例一 抽奖
+
+            let draw = function (count) {
+                //具体抽奖逻辑
+                console.info(`剩余${count}次`)
+            }
+
+            let residue = function* (count) {
+                while (count > 0) {
+                    count--;
+                    yield draw(count);
+                }
+            }
+
+            let star = residue(5);
+            let btn = document.createElement('button');
+            btn.id = 'start';
+            btn.textContent = '抽奖';
+            document.body.appendChild(btn);
+            document.getElementById('start').addEventListener('click', function () {
+                star.next();
+            }, false)
+        }
+
+
+
+        {
+            // 实例二 长轮询
+            let ajax = function* () {
+                yield new Promise(function (resolve, reject) {
+                    setTimeout(function () {
+                        resolve({
+                            code: 0
+                        })
+                    }, 200);
+                })
+            }
+
+            let pull = function () {
+                let genertaor = ajax();
+                let step = genertaor.next();
+                step.value.then(function (d) { //step.value就是promise实例
+                    if (d.code != 0) {
+                        setTimeout(function () {
+                            console.info('wait');
+                            pull()
+                        }, 1000);
+                    } else {
+                        console.info(d);
+                    }
+                })
+            }
+
+            pull();
+        }
+    </script>
+</body>
+
+</html>

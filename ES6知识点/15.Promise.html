@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        {
+            // Promise 简单使用
+
+            let ajax = function () {
+                console.log('执行3')
+
+                return new Promise((resolve, reject) => {
+                    setTimeout(function () {
+                        resolve()
+                    }, 2000)
+                })
+            }
+
+
+            ajax().then(() => {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve()
+                    }, 2000)
+                }).then(() => {
+                    console.log('timeout3')
+                })
+            })
+        }
+
+
+
+
+        {
+            // 异常捕获
+
+            let ajax = (num) => {
+                console.log('执行4')
+                return new Promise((resolve, reject) => {
+                    if (num > 5) {
+                        resolve()
+                    } else {
+                        throw new Error('出错了')
+                    }
+                })
+            }
+
+
+            // 正常情况
+            ajax(6).then(() => {
+                console.log('log', 6)
+            }).catch((err) => {
+                console.log('catch', err)
+            })
+
+
+            // 异常情况
+            ajax(3).then(() => {
+                console.log('log', 6)
+            }).catch((err) => {
+                console.log('catch', err)
+            })
+
+        }
+
+
+
+        {
+            // 所有图片加载完成再添加到页面
+            function loadImg(src) {
+                return new Promise((resolve, reject) => {
+                    let img = document.createElement('img')
+                    img.src = src;
+
+                    // 图片加载成功
+                    img.onload = () => {
+                        resolve(img)
+                    }
+
+                    // 图片加载失败
+                    img.onerror = () => {
+                        reject(err)
+                    }
+                })
+            }
+
+            function showImgs(imgs) {
+                imgs.forEach(img => {
+                    document.body.appendChild(img)
+                });
+            }
+
+            // Promise.all 把多个 Promise 实例 当成一个 Promise 实例，当 Promise.all 数组中的所有实例 执行完成 状态发生改变时 Promise.all 的状态才会改变（ 用于：  当多个实例执行完成，再触发某个事件、方法、实例 ）
+            Promise.all([
+                loadImg(
+                    'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fa0.att.hudong.com%2F30%2F29%2F01300000201438121627296084016.jpg&refer=http%3A%2F%2Fa0.att.hudong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1618040106&t=af21b066fc3510e2fca2cefe1226f841'
+                ),
+
+                loadImg(
+                    'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fa0.att.hudong.com%2F30%2F29%2F01300000201438121627296084016.jpg&refer=http%3A%2F%2Fa0.att.hudong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1618040106&t=af21b066fc3510e2fca2cefe1226f841'
+                ),
+
+                loadImg(
+                    'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fa0.att.hudong.com%2F30%2F29%2F01300000201438121627296084016.jpg&refer=http%3A%2F%2Fa0.att.hudong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1618040106&t=af21b066fc3510e2fca2cefe1226f841'
+                )
+            ]).then(showImgs)
+        }
+
+
+
+        {
+            // 有一个图片加载完就添加到页面
+            function loadImg(src) {
+                return new Promise((resolve, reject) => {
+                    let img = document.createElement('img')
+                    img.src = src;
+
+                    // 图片加载成功
+                    img.onload = () => {
+                        resolve(img)
+                    }
+
+                    // 图片加载失败
+                    img.onerror = () => {
+                        reject(err)
+                    }
+                })
+            }
+
+
+            function showImg(img) {
+                let p = document.createElement('p')
+                p.appendChild(img)
+                document.body.appendChild(p)
+            }
+
+
+            //  Promise.race 的数组中有一个状态发生改变 Promise.race 状态就发生变化，继续往下执行 （ 用于： 有多个方法 但是作用一样，谁反应速度快，就用谁  ）
+            Promise.race([
+                loadImg(
+                    'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fa0.att.hudong.com%2F30%2F29%2F01300000201438121627296084016.jpg&refer=http%3A%2F%2Fa0.att.hudong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1618040106&t=af21b066fc3510e2fca2cefe1226f841'
+                ),
+
+                loadImg(
+                    'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fa0.att.hudong.com%2F30%2F29%2F01300000201438121627296084016.jpg&refer=http%3A%2F%2Fa0.att.hudong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1618040106&t=af21b066fc3510e2fca2cefe1226f841'
+                ),
+
+                loadImg(
+                    'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fa0.att.hudong.com%2F30%2F29%2F01300000201438121627296084016.jpg&refer=http%3A%2F%2Fa0.att.hudong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1618040106&t=af21b066fc3510e2fca2cefe1226f841'
+                )
+            ]).then(showImgs)
+        }
+    </script>
+</body>
+
+</html>

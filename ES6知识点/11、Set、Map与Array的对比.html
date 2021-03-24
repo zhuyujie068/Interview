@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 数据结构横向对比，增、删、改、查
+        // Map的API更加简单，Array需要遍历才能进行查、改、删操作。
+        // Set与Array都不太简单。
+        {
+            let map = new Map();
+            let set = new Set();
+            let arr = [];
+
+            // 增
+            map.set('t', 1)
+
+            let t = {
+                t: 1
+            }
+            set.add(t)
+
+            arr.push({
+                t: 1
+            })
+
+
+            // 查
+            let map_exist = map.has('t')
+            let set_exist = set.has(t)
+            let arr_exist = arr.find(item => item.t)
+
+            console.info(map_exist) // true
+            console.info(set_exist) // true
+            console.info(arr_exist) // {t: 1}
+
+            // 改
+            map.set('t', 2)
+            set.forEach(item => item.t ? item.t = 2 : '') // 是对象可以直接 操作 原对象，因为Set值是对象时存储的是指针
+            arr.forEach(item => item.t ? item.t = 2 : '')
+
+            console.info(map) // {"t" => 2}
+            console.info(set) // {t => 2}
+            console.info(arr) // {t: 2}
+ 
+            // 删
+            map.delete('t')
+            set.forEach(item=>item.t?set.delete(item):'')
+
+            let index=arr.findIndex(item=>item.t)
+            arr.splice(index,1)
+        }
+    </script>
+</body>
+
+</html>

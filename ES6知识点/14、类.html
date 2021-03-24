@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        {
+            // 基本定义和生成实例 ( 创建 constructor => 构造函数 )
+            class Parent {
+                // 构造函数
+                constructor(name = 'mukewang') {
+                    this.name = name
+                }
+            }
+
+            let v_parent = new Parent('v')
+            console.log('构造函数和实例', v_parent)
+        }
+
+
+
+        {
+            // 继承 (  通过  extends 进行继承  )
+            class Parent {
+                constructor(name = 'mukewang') {
+                    this.name = name
+                }
+            }
+
+            class Child extends Parent {
+
+            }
+
+            console.log('继承', new Child())
+        }
+
+
+
+        {
+            // 继承传递参数 (  通过  super 子类向父类传递参数，如果使用 super 传递参数时一定要将其放在构造函数的第一行(super一定要放在第一行)  )
+            class Parent {
+                constructor(name = 'mukewang') {
+                    this.name = name
+                }
+            }
+
+            class Child extends Parent {
+                constructor(name = 'child') {
+                    // 向父类传递参数
+                    super(name)
+
+                    // 创建自己的参数
+                    this.type = 'child'
+                }
+            }
+
+            console.log('继承传递参数', new Child('hello'))
+        }
+
+
+
+        {
+            // getter,setter
+            class Parent {
+                constructor(name = 'mukewang') {
+                    this.name = name
+                }
+
+                get longName() {
+                    return 'mk' + this.name
+                }
+
+                set longName(value) {
+                    this.name = value
+                }
+            }
+
+            let v = new Parent()
+            console.log('getter', v.longName)
+
+            v.longName = 'hello'
+            console.log('setter', v.longName)
+
+        }
+
+
+
+        {
+            // 静态方法(  使用 static  生成静态方法，静态方法需要通过类去调用，不能通过类的实例去调用 )
+            class Parent {
+                constructor(name = 'mukewang') {
+                    this.name = name
+                }
+
+                static tell() {
+                    console.log('tell')
+                }
+            }
+
+            // 调用类的静态方法
+            Parent.tell()
+        }
+
+        
+
+        {
+            // 静态属性(  不需要关键字，直接给属性 )
+            class Parent {
+                constructor(name = 'mukewang') {
+                    this.name = name
+                }
+
+                static tell() {
+                    console.log('tell')
+                }
+            }
+
+            // 声明静态属性
+            Parent.type = 'test'
+
+            console.log('静态属性', Parent.type)
+        }
+    </script>
+</body>
+
+</html>
