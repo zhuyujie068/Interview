@@ -8,8 +8,27 @@
     安装 ts
     npm unstall -g typescript
 
+
+    tsc xxx.ts 将 xxx.ts 文件转换成 xxx.js 文件，以方便 浏览器、node 运行，不会使用 tsconfig.json 配置项
+    tsc 将会把项目下面的 所有 ts 文件转换成为 js 文件，默认 使用 tsconfig.json 配置项
+
+
+    tsc -W 将会持续监听 文件下面 ts 文件的变化并将其进行编译成为 js
+
+    tsconfig.json 中 的 outDir 值 表示为 ts 编译成为 js 放在哪个目录下面， "outDir": "./build"   编译后放在 build 文件下面
+
+
     将 ts 转换成为 js 并且使用 node 进行运行
-    npm install -g ts-node = 相当于 => tsc xxx.ts (文件) 再使用node运行 生成的 xxx.js 文件
+    npm install -g ts-node
+     ts-node xxx.ts = 相当于 => tsc xxx.ts (文件) 再使用node运行 生成的 xxx.js 文件
+
+
+    nodemon 是一种工具，可以自动检测到目录中的文件更改时通过重新启动应用程序来调试基于node.js的应用程序。
+    nodemon xxx xxx xxx.js   当 xxx.js 文件变化后 就执行 xxx xxx xxx.js 命令， nodemon node ./build/index.js 表示 index.js 文件更改后 就执行 node ./build/index.js 命令
+
+
+    npm init            生成    package.json
+    tsc --init          生成    tsconfig.json
  * /
 
 

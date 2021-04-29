@@ -12,6 +12,7 @@
 // constructor 构造器 当类被 实例 时会自动执行
 
 class Person7 {
+    // 在构造函数的参数上使用 public 等同于创建了同名的成员变量。
     constructor(public name: string) { }
 }
 
