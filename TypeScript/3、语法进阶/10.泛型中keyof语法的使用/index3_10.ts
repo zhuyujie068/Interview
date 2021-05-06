@@ -14,12 +14,14 @@ class Teacher {
 }
 
 
+
 const teacher = new Teacher({
     name: 'zyj',
+
     age: 18,
     gender: 'male'
 });
 
 console.log(teacher.getInfo('name'));
-
+ 
 

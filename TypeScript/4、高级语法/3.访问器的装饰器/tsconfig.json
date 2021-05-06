@@ -1,53 +1,33 @@
 {
-  // "files":["./index3_1.ts"],      include 对那些编译文件使用该配置文件进行 编译  
-  // "include":["./index3_1.ts"],    和 files 功能一样
-  // "exclude":["./index3_1.ts"],    exclude 编译时对那些文件进行屏蔽，不使用该配置文件进行 编译
-
-  // 如果没有写 include、files、exclude 默认会将 所有 ts 文件 按此配置文件进行 编译
-
-
-
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
     /* Basic Options */
-
-    // "incremental": true,                         /* Enable incremental compilation  启用增量编译,就是已经编译后的文件不再继续编译 */
-
+    // "incremental": true,                         /* Enable incremental compilation */
     "target": "es5",                                /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
     "module": "commonjs",                           /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
     // "lib": [],                                   /* Specify library files to be included in the compilation. */
-
-    // "allowJs": true,                             /* Allow javascript files to be compiled. 是否将 js 文件进行编译，会将 js 根据 target 需要编译成为的版本 */
-    // "checkJs": true,                             /* Report errors in .js files. 对 js 语法进行检测 */
-
+    // "allowJs": true,                             /* Allow javascript files to be compiled. */
+    // "checkJs": true,                             /* Report errors in .js files. */
     // "jsx": "preserve",                           /* Specify JSX code generation: 'preserve', 'react-native', 'react', 'react-jsx' or 'react-jsxdev'. */
     // "declaration": true,                         /* Generates corresponding '.d.ts' file. */
     // "declarationMap": true,                      /* Generates a sourcemap for each corresponding '.d.ts' file. */
     // "sourceMap": true,                           /* Generates corresponding '.map' file. */
-
-
-    // "outFile": "./build/page.js",                /* Concatenate and emit output to single file. 将所有要出输出的文件打包合并到某一个文件中。这样 module 就不支持 commonjs ，可以将其规范修改成为 amd、system */
-    // "outDir": "./build",                         /* Redirect output structure to the directory.  将打包出来的文件输出到那个位置 */
-    // "rootDir": "./",                             /* Specify the root directory of input files. Use to control the output directory structure with --outDir.  指定输入文件的根目录。*/
-
-
+    // "outFile": "./",                             /* Concatenate and emit output to single file. */
+    // "outDir": "./",                              /* Redirect output structure to the directory. */
+    // "rootDir": "./",                             /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
     // "composite": true,                           /* Enable project compilation */
     // "tsBuildInfoFile": "./",                     /* Specify file to store incremental compilation information */
-
-    // "removeComments": true,                      /* Do not emit comments to output. 不向输出发出注释 */
-
+    // "removeComments": true,                      /* Do not emit comments to output. */
     // "noEmit": true,                              /* Do not emit outputs. */
     // "importHelpers": true,                       /* Import emit helpers from 'tslib'. */
     // "downlevelIteration": true,                  /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
     // "isolatedModules": true,                     /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
 
     /* Strict Type-Checking Options */
-
-    "strict": true,                                 /* Enable all strict type-checking options. 启用所有严格的类型检查选项 */
-    // "noImplicitAny": true,                       /* Raise error on expressions and declarations with an implied 'any' type.  不允许隐含的声明 any  */
-    // "strictNullChecks": true,                    /* Enable strict null checks. 不允许将 null 赋值给基础类型 */
-
-
+    "strict": true,                                 /* Enable all strict type-checking options. */
+    // "noImplicitAny": true,                       /* Raise error on expressions and declarations with an implied 'any' type. */
+    // "strictNullChecks": true,                    /* Enable strict null checks. */
     // "strictFunctionTypes": true,                 /* Enable strict checking of function types. */
     // "strictBindCallApply": true,                 /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
     // "strictPropertyInitialization": true,        /* Enable strict checking of property initialization in classes. */
@@ -55,12 +35,8 @@
     // "alwaysStrict": true,                        /* Parse in strict mode and emit "use strict" for each source file. */
 
     /* Additional Checks */
-
-
-    // "noUnusedLocals": true,                      /* Report errors on unused locals. 报告未使用的本地变量的错误 */
-    // "noUnusedParameters": true,                  /* Report errors on unused parameters. 报告未使用参数的错误，针对函数 */
-
-
+    // "noUnusedLocals": true,                      /* Report errors on unused locals. */
+    // "noUnusedParameters": true,                  /* Report errors on unused parameters. */
     // "noImplicitReturns": true,                   /* Report error when not all code paths in function return a value. */
     // "noFallthroughCasesInSwitch": true,          /* Report errors for fallthrough cases in switch statement. */
     // "noUncheckedIndexedAccess": true,            /* Include 'undefined' in index signature results */
@@ -85,8 +61,8 @@
     // "inlineSources": true,                       /* Emit the source alongside the sourcemaps within a single file; requires '--inlineSourceMap' or '--sourceMap' to be set. */
 
     /* Experimental Options */
-    // "experimentalDecorators": true,              /* Enables experimental support for ES7 decorators.  支持对ES7装饰器的实验支持 */
-    // "emitDecoratorMetadata": true,               /* Enables experimental support for emitting type metadata for decorators. 为装饰器启用对发出类型元数据的实验性支持 */
+    "experimentalDecorators": true,              /* Enables experimental support for ES7 decorators. */
+    "emitDecoratorMetadata": true,               /* Enables experimental support for emitting type metadata for decorators. */
 
     /* Advanced Options */
     "skipLibCheck": true,                           /* Skip type checking of declaration files. */
