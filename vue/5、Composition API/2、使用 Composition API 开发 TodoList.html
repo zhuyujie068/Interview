@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+</body>
+<script>
+    // 关于 list 操作的内容封装
+    const listRelativeEffect = () => {
+        const {
+            reactive
+        } = Vue;
+        const list = reactive([]);
+        const addList = (item) => {
+            list.push(item)
+            item = ''
+        }
+
+        return {
+            list,
+            addList
+        }
+    }
+
+    // 关于 input 操作的内容封装
+    const inputRelativeEffect = () => {
+        const {
+            ref
+        } = Vue;
+        const inputValue = ref('');
+        const inputChange = (e) => {
+            // e.target.value 获取 input 中的值
+            inputValue.value = e.target.value
+        }
+
+        return {
+            inputValue,
+            inputChange
+        }
+    }
+
+
+    const app = Vue.createApp({
+        setup() {
+            // 流程调度 中转
+            const {
+                list,
+                addList
+            } = listRelativeEffect();
+
+            const {
+                inputValue,
+                inputChange
+            } = inputRelativeEffect();
+
+            const handleSubmit = () => {
+                addList(inputValue.value)
+                inputValue.value = ''
+            }
+
+            return {
+                list,
+                addList,
+                handleSubmit,
+                inputValue,
+                inputChange
+            }
+        },
+        template: `
+            <div>
+                <div>
+                    <input :value="inputValue" @input="inputChange"/>
+                    <button @click="handleSubmit">提交</button>
+                </div>
+                <ul>
+                    <li v-for="item in list" :key="item">{{item}}</li>
+                </ul>
+            </div>
+        `
+    });
+
+    const vm = app.mount('#root')
+</script>
+
+</html>
